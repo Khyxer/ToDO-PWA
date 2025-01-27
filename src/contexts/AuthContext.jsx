@@ -59,6 +59,8 @@ export const AuthProvider = ({ children }) => {
         username,
         avatarUrl,
         bannerUrl,
+        theme: "dark",
+        color: "#DA4127",
       });
     } catch (error) {
       console.error("Error in signup:", error);

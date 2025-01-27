@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-const profileColors = {
+const PROFILE_COLORS = {
   red: "#DA4127",
   blue: "#3DB4F2",
   purple: "#C063FF",
@@ -8,60 +8,114 @@ const profileColors = {
   orange: "#EF881A",
 };
 
-const profileTheme = [
+const THEME_OPTIONS = [
   {
-    id: "dark",
+    theme: "dark",
     bg: "#272C38",
     text: "#FFFFFF",
+    label: "Dark Theme",
   },
   {
-    id: "light",
+    theme: "light",
     bg: "#D9D9D9",
     text: "#272727",
+    label: "Light Theme",
   },
 ];
 
-const UserPreference = () => {
+const UserPreference = ({
+  onColorSelect,
+  onThemeSelect,
+  defaultColor = "#DA4127",
+  defaultTheme = "dark",
+}) => {
+  const [selectedColor, setSelectedColor] = useState(defaultColor);
+  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+
+  const handleColorClick = (color) => {
+    setSelectedColor(color);
+    onColorSelect?.(color);
+  };
+
+  const handleThemeClick = (theme) => {
+    setSelectedTheme(theme.theme);
+    onThemeSelect?.(theme);
+  };
+
   return (
-    <>
-      <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2 ">
-            Profile Color
-          </h2>
-          <div className="flex gap-3">
-            {Object.entries(profileColors).map(([key, color]) => (
-              <div
-                className="p-5 lg:p-7 rounded-lg cursor-pointer duration-150 hover:scale-[1.05] hover:-translate-y-[4px] "
-                key={key}
-                style={{ backgroundColor: color }}
-              ></div>
-            ))}
-          </div>
+    <div className="space-y-6">
+      <section aria-labelledby="color-heading">
+        <h2
+          id="color-heading"
+          className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2"
+        >
+          Profile Color
+        </h2>
+        <div className="flex gap-3">
+          {Object.entries(PROFILE_COLORS).map(([name, color]) => (
+            <button
+              key={name}
+              type="button"
+              aria-label={`Select ${name} color`}
+              aria-pressed={selectedColor === color}
+              className={`
+                p-5 lg:p-7 rounded-lg 
+                transform transition-all duration-150
+                hover:scale-105 hover:-translate-y-1
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                border-[3px] ${
+                  selectedColor === color
+                    ? "border-blue-800"
+                    : "border-transparent"
+                }
+              `}
+              style={{ backgroundColor: color }}
+              onClick={() => handleColorClick(color)}
+            />
+          ))}
         </div>
-        <div>
-          <h2 className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2 ">
-            App Theme
-          </h2>
-          <div className="flex gap-3">
-            {profileTheme.map((profile) => (
-              <div
-                key={profile.id}
-                style={{ backgroundColor: profile.bg }}
-                className="h-[50px] w-[50px] rounded-lg flex items-end pl-1 cursor-pointer"
+      </section>
+
+      <section aria-labelledby="theme-heading">
+        <h2
+          id="theme-heading"
+          className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2"
+        >
+          App Theme
+        </h2>
+        <div className="flex gap-3">
+          {THEME_OPTIONS.map((theme) => (
+            <button
+              key={theme.theme}
+              type="button"
+              aria-label={theme.label}
+              aria-pressed={selectedTheme === theme.theme}
+              className={`
+                h-[50px] w-[50px] rounded-lg 
+                flex items-end pl-1 
+                transition-all duration-150
+                hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                border-[3px] ${
+                  selectedTheme === theme.theme
+                    ? "border-blue-800"
+                    : "border-transparent"
+                }
+              `}
+              style={{ backgroundColor: theme.bg }}
+              onClick={() => handleThemeClick(theme)}
+            >
+              <span
+                style={{ color: theme.text }}
+                className="text-3xl font-semibold"
+                aria-hidden="true"
               >
-                <p
-                  style={{ color: profile.text }}
-                  className="text-3xl font-semibold "
-                >
-                  A
-                </p>
-              </div>
-            ))}
-          </div>
+                A
+              </span>
+            </button>
+          ))}
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import { InputItem } from "./InputItem";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import Loading from "../Loading";
+import { useToast } from "../../hooks/useToast";
 
 const TestItem = ({
   title,
@@ -63,6 +64,7 @@ const TestItem = ({
 );
 
 const RegisterForm = () => {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -81,7 +83,7 @@ const RegisterForm = () => {
       navigate("/");
     } catch (error) {
       console.error(error);
-      setError("Error al registrar usuario: " + error.message);
+      toast.error("Error registering user: " + error.message);
     } finally {
       setIsUploading(false);
     }
@@ -95,10 +97,10 @@ const RegisterForm = () => {
           setFile(file);
           setError("");
         } else {
-          setError("La imagen debe ser menor a 2MB");
+          toast.error("The image must be less than 2MB");
         }
       } else {
-        setError("Por favor selecciona un archivo de imagen válido");
+        toast.error("Select a valid archive");
       }
     }
   };
@@ -147,7 +149,7 @@ const RegisterForm = () => {
             />
           </div>
           <button
-            className="dark:bg-[#027FBE] bg-[#2696E0] text-xl font-bold py-1 px-8 text-[#EDF1F5] dark:text-[#D3D3D3] rounded-xl"
+            className="dark:bg-[#027FBE] bg-[#2696E0] text-2xl font-bold py-1 lg:py-2 px-8 text-[#EDF1F5] dark:text-[#D3D3D3] rounded-xl"
             disabled={isUploading}
           >
             Create Account

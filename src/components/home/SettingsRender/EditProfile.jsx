@@ -1,97 +1,242 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
-import { IoLogOutOutline } from "react-icons/io5";
+import gsap from "gsap";
+import { useToast } from "../../../hooks/useToast";
 
-const EditProfile = () => {
-  const { user, logout } = useAuth();
+const EditProfile = ({ onUserNameChange }) => {
+  const toast = useToast();
+  const { user } = useAuth();
   const [currentUser, setCurrentUser] = useState(user.username);
+  const [avatarPreview, setAvatarPreview] = useState(user.avatarUrl);
+  const [bannerPreview, setBannerPreview] = useState(user.bannerUrl);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const avatarInputRef = useRef(null);
+  const bannerInputRef = useRef(null);
+  const avatarPreviewRef = useRef(null);
+  const bannerPreviewRef = useRef(null);
+
+  const handleUsernameChange = (e) => {
+    const newUserName = e.target.value.trim();
+    setCurrentUser(newUserName);
+    onUserNameChange?.(newUserName);
+  };
+
+  const animatePreview = (element) => {
+    gsap.fromTo(
+      element,
+      {
+        opacity: 0,
+        scale: 0.8,
+        y: 20,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "back.out(1.7)",
+      }
+    );
+  };
+
+  const handleFilePreview = (file, setPreview, previewRef) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+        setTimeout(() => {
+          if (previewRef.current) {
+            animatePreview(previewRef.current);
+          }
+        }, 100);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileUpload = async (e, type) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.info("Please upload an image file");
+      return;
+    }
+
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.info("File size must be less than 2MB");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const previewRef =
+        type === "avatar" ? avatarPreviewRef : bannerPreviewRef;
+      handleFilePreview(
+        file,
+        type === "avatar" ? setAvatarPreview : setBannerPreview,
+        previewRef
+      );
+
+      // aca tengo que poner la logica de editar el perfil
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload file. Please try again");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (avatarPreview && avatarPreviewRef.current) {
+      gsap.fromTo(
+        avatarPreviewRef.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }
+      );
+    }
+    if (bannerPreview && bannerPreviewRef.current) {
+      gsap.fromTo(
+        bannerPreviewRef.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }
+      );
+    }
+  }, []);
 
   return (
-    <>
-      <div className="grid gap-4">
-        <div>
-          <h2 className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2 ">
-            User Name
-          </h2>
-          <input
-            type="text"
-            value={currentUser}
-            onChange={(e) => setCurrentUser()}
-            className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] text-[#4A6A83] dark:text-[#728AA1] font-semibold outline-none px-2 py-1"
-          />
-        </div>
-
-        <div>
-          <h2 className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2 ">
-            Avatar
-          </h2>
-          <div className="flex gap-2">
-            <div>
-              <div className="w-32 h-32 lg:w-40 lg:h-40 bg-[#272C38] rounded-full relative overflow-hidden">
-                <label
-                  htmlFor="avatar"
-                  className="cursor-pointer w-full h-full absolute top-0 left-0 flex items-center justify-center text-center font-medium text-[#B9B9B9]"
-                >
-                  Click to update <br /> avatar
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="avatar"
-                  className="hidden"
-                />
-              </div>
-            </div>
-            <div className="w-32 h-32 lg:w-40 lg:h-40 overflow-hidden rounded-full ">
-              <img
-                src={user.avatarUrl}
-                alt=""
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2 ">
-            Banner
-          </h2>
-          <div className="flex flex-col gap-2">
-            <div>
-              <div className="w-full h-28 lg:h-44 bg-[#272C38] relative overflow-hidden">
-                <label
-                  htmlFor="avatar"
-                  className="cursor-pointer w-full h-full absolute top-0 left-0 flex items-center justify-center text-center font-medium text-[#B9B9B9]"
-                >
-                  Click to update banner
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="avatar"
-                  className="hidden"
-                />
-              </div>
-            </div>
-            <div className="w-full h-28 lg:h-44 overflow-hidden ">
-              <img
-                src={user.bannerUrl}
-                alt=""
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          className="bg-red-600 hover:bg-red-700 duration-200 rounded-md text-[#cdcdcd]  font-semibold text-xl w-fit px-5 py-1 flex items-center justify-center gap-1 mt-10 mb-2 "
-          onClick={logout}
+    <div className="space-y-6">
+      {/* Username Section */}
+      <section aria-labelledby="username-heading">
+        <h2
+          id="username-heading"
+          className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2"
         >
-          <IoLogOutOutline className="text-3xl" />
-          Logout
-        </button>
-      </div>
-    </>
+          User Name
+        </h2>
+        <input
+          type="text"
+          value={currentUser}
+          onChange={handleUsernameChange}
+          aria-label="Username"
+          spellCheck={false}
+          maxLength={30}
+          className="w-full border border-[#728AA143] bg-[#728AA113] rounded-md
+            placeholder:text-[#728AA155] text-[#4A6A83] dark:text-[#728AA1] 
+            font-semibold px-3 py-2 focus:ring-2 focus:ring-blue-500 
+            focus:border-transparent outline-none transition-all duration-200"
+        />
+      </section>
+
+      {/* Avatar Section */}
+      <section aria-labelledby="avatar-heading">
+        <h2
+          id="avatar-heading"
+          className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2"
+        >
+          Avatar
+        </h2>
+        <div className="flex gap-4 items-center">
+          <button
+            onClick={() => avatarInputRef.current?.click()}
+            disabled={isUploading}
+            className="w-32 h-32 lg:w-40 lg:h-40 bg-[#EFF1F3] dark:bg-[#272C38] rounded-full 
+              relative overflow-hidden group transition-all duration-200 
+              hover:dark:bg-[#323845] hover:bg-[#e2e2e2]  focus:outline-none focus:ring-2 
+              focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Upload avatar image"
+          >
+            <div
+              className="absolute inset-0 flex items-center justify-center 
+              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83]"
+            >
+              {isUploading ? (
+                "Uploading..."
+              ) : (
+                <>
+                  Click to update
+                  <br />
+                  avatar
+                </>
+              )}
+            </div>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e, "avatar")}
+              aria-label="Avatar file upload"
+            />
+          </button>
+          {avatarPreview && (
+            <div
+              ref={avatarPreviewRef}
+              className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden 
+                ring-1 ring-[#728AA143]"
+              style={{ opacity: 0 }}
+            >
+              <img
+                src={avatarPreview}
+                alt="User avatar preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Banner Section */}
+      <section aria-labelledby="banner-heading">
+        <h2
+          id="banner-heading"
+          className="font-medium lg:text-lg dark:text-[#728AA1] text-[#5A5A5A] mb-2"
+        >
+          Banner
+        </h2>
+        <div className="space-y-2">
+          <button
+            onClick={() => bannerInputRef.current?.click()}
+            disabled={isUploading}
+            className="w-full h-28 lg:h-44 bg-[#EFF1F3] dark:bg-[#272C38] relative overflow-hidden 
+              group transition-all duration-200 hover:dark:bg-[#323845] hover:bg-[#e2e2e2] 
+              focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Upload banner image"
+          >
+            <div
+              className="absolute inset-0 flex items-center justify-center 
+              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83]"
+            >
+              {isUploading ? "Uploading..." : "Click to update banner"}
+            </div>
+            <input
+              ref={bannerInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e, "banner")}
+              aria-label="Banner file upload"
+            />
+          </button>
+          {bannerPreview && (
+            <div
+              ref={bannerPreviewRef}
+              className="w-full h-28 lg:h-44 overflow-hidden rounded-md 
+                ring-1 ring-[#728AA143]"
+              style={{ opacity: 0 }}
+            >
+              <img
+                src={bannerPreview}
+                alt="User banner preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 };
 

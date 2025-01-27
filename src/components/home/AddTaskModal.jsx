@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { IoClose } from "react-icons/io5";
+import EmojiPickerInput from "../EmojiPickerInput";
 
 const AddTaskModal = ({
   handleCloseModal,
@@ -83,9 +84,11 @@ const AddTaskModal = ({
           </header>
           <h1 className="font-extrabold text-3xl">Add Task</h1>
           <div className="flex w-full flex-col gap-4">
-            <div className="grid gap-2">
+            <div className="grid gap-2 ">
               <h2 className="font-semibold text-2xl">Icon Task</h2>
-              <div className="border-dashed border-2 rounded-lg h-12 w-12 dark:border-[#728AA1] border-[#4A6A83] cursor-pointer hover:bg-[#728AA113] hover:scale-105  duration-150"></div>
+              <div className="w-fit">
+                <EmojiPickerInput />
+              </div>
             </div>
             <div className="grid gap-2">
               <h2 className="font-semibold text-2xl">Task Name</h2>

@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 const HeroSection = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
@@ -29,8 +29,8 @@ const HeroSection = () => {
               className="xl:w-32 xl:h-32 w-28 h-28 rounded-full border-4 border-[#FAFAFA] dark:border-[#152232] shadow-lg dark:shadow-none object-cover select-none "
             />
           ) : (
-            <div className="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-gray-300 flex items-center justify-center">
-              <span className="text-2xl font-bold text-gray-600">
+            <div className="xl:w-32 xl:h-32 w-28 h-28 rounded-full border-4 border-[#FAFAFA] dark:border-[#152232] shadow-lg bg-gray-300 flex items-center justify-center">
+              <span className="text-6xl font-bold text-gray-600">
                 {user.username?.charAt(0).toUpperCase()}
               </span>
             </div>

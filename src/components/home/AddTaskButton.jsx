@@ -17,8 +17,11 @@ const AddTaskButton = () => {
 
   return (
     <>
-      <div className="fixed z-10  bottom-5 right-5 text-4xl p-2 bg-[#027FBE] text-white cursor-pointer rounded-full ">
-        <FaPlus onClick={handleOpenModal} />
+      <div
+        onClick={handleOpenModal}
+        className="fixed z-10  bottom-5 right-5 text-4xl p-2 bg-[#027FBE] text-white cursor-pointer rounded-full "
+      >
+        <FaPlus />
       </div>
       {openModal ? (
         <AddTaskModal

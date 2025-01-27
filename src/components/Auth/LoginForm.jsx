@@ -4,8 +4,10 @@ import { InputItem } from "./InputItem";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import Loading from "../Loading";
+import { useToast } from "../../hooks/useToast";
 
 const LoginForm = () => {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +30,7 @@ const LoginForm = () => {
       await login(email, password);
     } catch (error) {
       console.error("Error logging in:", error);
-      setError("Error al iniciar sesión. Por favor verifica tus credenciales.");
+      toast.error("Incorrect username or password");
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +61,7 @@ const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button className="dark:bg-[#027FBE] bg-[#2696E0] text-xl font-bold py-1 px-8 text-[#EDF1F5] dark:text-[#D3D3D3] rounded-xl ">
+          <button className="dark:bg-[#027FBE] bg-[#2696E0] text-2xl font-bold py-1 lg:py-2 px-8 text-[#EDF1F5] dark:text-[#D3D3D3] rounded-xl ">
             Log In
           </button>
         </form>

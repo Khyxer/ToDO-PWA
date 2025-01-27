@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import ToggleTheme from "../components/ToggleTheme";
-import { useAuth } from "../contexts/AuthContext";
 import HeroSection from "../components/home/HeroSection";
 import AddTaskButton from "../components/home/AddTaskButton";
 import SettingsSection from "../components/home/SettingsRender/SettingsSection";
@@ -18,9 +18,27 @@ const NavItem = ({ sectionName, handleChangeSection, selected }) => (
 
 const MainPage = () => {
   const [section, setSection] = useState("Home");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleChangeSection = (section) => {
-    setSection(section);
+  useEffect(() => {
+    if (location.state?.section) {
+      setSection(location.state.section);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    const titles = {
+      Home: "ToDO Khyxer · Home",
+      Task: "ToDO Khyxer · Tasks",
+      Settings: "ToDO Khyxer · Settings",
+    };
+    document.title = titles[section] || "ToDO Khyxer";
+  }, [section]);
+
+  const handleChangeSection = (newSection) => {
+    setSection(newSection);
+    navigate("/", { state: { section: newSection }, replace: true });
   };
 
   const sections = {
@@ -31,7 +49,7 @@ const MainPage = () => {
 
   return (
     <>
-      <div className="">
+      <div>
         <AddTaskButton />
       </div>
       <div className="fixed z-50">
@@ -57,7 +75,7 @@ const MainPage = () => {
           />
         </div>
       </div>
-      <div className=" flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="w-full lg:w-[65%]">{sections[section] || null}</div>
       </div>
     </>
