@@ -4,6 +4,7 @@ import ToggleTheme from "../components/ToggleTheme";
 import HeroSection from "../components/home/HeroSection";
 import AddTaskButton from "../components/home/AddTaskButton";
 import SettingsSection from "../components/home/SettingsRender/SettingsSection";
+import TaskList from "../components/home/TasksRender/TasksSection";
 
 const NavItem = ({ sectionName, handleChangeSection, selected }) => (
   <p
@@ -43,7 +44,7 @@ const MainPage = () => {
 
   const sections = {
     Home: <p>Soy el home</p>,
-    Task: <p>Soy Task</p>,
+    Task: <TaskList />,
     Settings: <SettingsSection />,
   };
 
@@ -75,7 +76,7 @@ const MainPage = () => {
           />
         </div>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center px-5 py-7">
         <div className="w-full lg:w-[65%]">{sections[section] || null}</div>
       </div>
     </>

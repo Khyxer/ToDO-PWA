@@ -40,7 +40,7 @@ const SettingsSection = () => {
 
   const handleSave = () => {
     if (!settings.userName?.trim()) {
-      toast.error("Ingresa un usuario");
+      toast.error("Enter a valid username");
       return;
     }
 
@@ -50,7 +50,7 @@ const SettingsSection = () => {
   };
 
   return (
-    <main className="px-5 py-7">
+    <main>
       <header className="mb-6">
         <h1 className="font-medium text-xl lg:text-2xl text-[#4A6A83] dark:text-[#728AA1]">
           Settings

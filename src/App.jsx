@@ -19,6 +19,7 @@ function AppContent() {
           path="/"
           element={
             <ProtectedRoute>
+              
               <MainPage />
             </ProtectedRoute>
           }

@@ -1,7 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { IoClose } from "react-icons/io5";
 import EmojiPickerInput from "../EmojiPickerInput";
+import { toast } from "react-toastify";
+import Loading from "../Loading";
+import { auth, db } from "../../firebase/config";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const AddTaskModal = ({
   handleCloseModal,
@@ -12,6 +16,44 @@ const AddTaskModal = ({
 }) => {
   const modalRef = useRef(null);
   const bgRef = useRef(null);
+  const [selectedEmoji, setSelectedEmoji] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [taskDesc, setTaskDesc] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleEmojiChange = (emoji) => {
+    setSelectedEmoji(emoji);
+  };
+
+  const handleAddTask = async () => {
+    if (!selectedEmoji || !taskName || !taskDesc) {
+      toast.error("You need to complete all inputs");
+      return;
+    }
+    setIsLoading(true);
+
+    try {
+      const userId = auth.currentUser.uid;
+      const taskData = {
+        emoji: selectedEmoji,
+        title: taskName,
+        description: taskDesc,
+        completed: false,
+        createdAt: serverTimestamp(),
+      };
+
+      const taskRef = collection(db, `users/${userId}/tasks`);
+       await addDoc(taskRef, taskData);
+
+      setIsLoading(false);
+      toast.success("Task added successfully");
+      handleCloseModal();
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("Error adding task");
+      console.error("something went wrong:", error);
+    }
+  };
 
   useEffect(() => {
     if (openModal) {
@@ -66,6 +108,11 @@ const AddTaskModal = ({
 
   return (
     <>
+      {isLoading && (
+        <div className="z-[200] fixed">
+          <Loading message={"Creating task"} />
+        </div>
+      )}
       <div
         className="z-50 h-screen fixed w-full bg-[#0b1622ad] flex justify-center items-center"
         ref={bgRef}
@@ -84,18 +131,20 @@ const AddTaskModal = ({
           </header>
           <h1 className="font-extrabold text-3xl">Add Task</h1>
           <div className="flex w-full flex-col gap-4">
-            <div className="grid gap-2 ">
+            <div className="grid gap-2">
               <h2 className="font-semibold text-2xl">Icon Task</h2>
               <div className="w-fit">
-                <EmojiPickerInput />
+                <EmojiPickerInput onEmojiSelect={handleEmojiChange} />
               </div>
             </div>
             <div className="grid gap-2">
               <h2 className="font-semibold text-2xl">Task Name</h2>
               <input
                 type="text"
+                onChange={(e) => setTaskName(e.target.value)}
                 placeholder="Buy a new computer"
-                className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 outline-none"
+                className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 
+                focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
               />
             </div>
             <div className="grid gap-2">
@@ -103,10 +152,15 @@ const AddTaskModal = ({
               <textarea
                 rows={5}
                 placeholder="Go to a real store to buy a new computer"
-                className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 outline-none"
+                onChange={(e) => setTaskDesc(e.target.value)}
+                className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 outline-none
+                focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               ></textarea>
             </div>
-            <button className=" bg-[#2696E0] dark:bg-[#027FBE] outline-none px-4 py-1 rounded-lg text-white font-bold text-lg">
+            <button
+              className=" bg-[#2696E0] dark:bg-[#027FBE] outline-none px-4 py-1 rounded-lg text-white font-bold text-lg"
+              onClick={handleAddTask}
+            >
               Add Task
             </button>
           </div>

@@ -122,11 +122,8 @@ const EditProfile = ({ onUserNameChange }) => {
           onChange={handleUsernameChange}
           aria-label="Username"
           spellCheck={false}
-          maxLength={30}
-          className="w-full border border-[#728AA143] bg-[#728AA113] rounded-md
-            placeholder:text-[#728AA155] text-[#4A6A83] dark:text-[#728AA1] 
-            font-semibold px-3 py-2 focus:ring-2 focus:ring-blue-500 
-            focus:border-transparent outline-none transition-all duration-200"
+          maxLength={15}
+          className="w-full border border-[#728AA143] bg-[#728AA113] rounded-md placeholder:text-[#728AA155] text-[#4A6A83] dark:text-[#728AA1] font-semibold px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
         />
       </section>
 

@@ -106,7 +106,7 @@ const UserPreference = ({
             >
               <span
                 style={{ color: theme.text }}
-                className="text-3xl font-semibold"
+                className="text-3xl font-semibold select-none"
                 aria-hidden="true"
               >
                 A
