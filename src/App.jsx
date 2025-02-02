@@ -8,29 +8,31 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useDocumentTitle } from "./hooks/useDocumentTitle";
+import { UserColorProvider } from "./contexts/UserColorContext";
 
 function AppContent() {
   useDocumentTitle();
 
   return (
     <AuthProvider>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              
-              <MainPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/loading"
-          element={<Loading message={"You shouldn't see this page..."} />}
-        />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
+      <UserColorProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/loading"
+            element={<Loading message={"You shouldn't see this page..."} />}
+          />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </UserColorProvider>
     </AuthProvider>
   );
 }

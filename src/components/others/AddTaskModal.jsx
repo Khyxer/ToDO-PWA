@@ -43,7 +43,7 @@ const AddTaskModal = ({
       };
 
       const taskRef = collection(db, `users/${userId}/tasks`);
-       await addDoc(taskRef, taskData);
+      await addDoc(taskRef, taskData);
 
       setIsLoading(false);
       toast.success("Task added successfully");

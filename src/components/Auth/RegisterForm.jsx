@@ -55,6 +55,7 @@ const TestItem = ({
             texto="User Name"
             isPass={false}
             value={value}
+            maxLength={15}
             onChange={onChange}
           />
         </div>
@@ -81,6 +82,7 @@ const RegisterForm = () => {
       setIsUploading(true);
       await signup(email, password, username, avatarFile, bannerFile);
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error(error);
       toast.error("Error registering user: " + error.message);

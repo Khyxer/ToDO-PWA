@@ -5,13 +5,16 @@ import UserPreference from "./UserPreference";
 import EditProfile from "./EditProfile";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useToast } from "../../../hooks/useToast";
+import { useUserColor } from "../../../contexts/UserColorContext";
+import Spinner from "../../others/Spinner";
 
 const SettingsSection = () => {
   const toast = useToast();
+  const { userColor, loading } = useUserColor();
   const { user, logout } = useAuth();
   const [settings, setSettings] = useState({
     userName: user.username,
-    selectedColor: user.preferences?.color || "#DA4127",
+    selectedColor: user.preferences?.color || userColor,
     selectedTheme: user.preferences?.theme || { theme: "dark" },
   });
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,6 +52,10 @@ const SettingsSection = () => {
     console.log(settings.userName);
   };
 
+  if (loading) {
+    return <Spinner />;
+  }
+
   return (
     <main>
       <header className="mb-6">
@@ -61,7 +68,6 @@ const SettingsSection = () => {
         <UserPreference
           onColorSelect={handleColorChange}
           onThemeSelect={handleThemeChange}
-          defaultColor={settings.selectedColor}
           defaultTheme={settings.selectedTheme.theme}
         />
 

@@ -2,16 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ToggleTheme from "../components/ToggleTheme";
 import HeroSection from "../components/home/HeroSection";
-import AddTaskButton from "../components/home/AddTaskButton";
 import SettingsSection from "../components/home/SettingsRender/SettingsSection";
 import TaskList from "../components/home/TasksRender/TasksSection";
+import { auth, db } from "../firebase/config";
+import { doc, getDoc } from "firebase/firestore";
+import HomeSection from "../components/home/HomeRender/HomeSection";
+import { useUserColor } from "../contexts/UserColorContext";
+import Spinner from "../components/others/Spinner";
 
-const NavItem = ({ sectionName, handleChangeSection, selected }) => (
+const NavItem = ({ sectionName, handleChangeSection, selected, userColor }) => (
   <p
     onClick={() => handleChangeSection(sectionName)}
-    className={`px-4 py-1  font-semibold] select-none font-semibold text-[17px] lg:text-xl cursor-pointer duration-150 hover:text-[#DA4127]
-      ${selected ? "text-[#DA4127]" : "text-[#4A6A83] dark:text-[#728AA1]"}
-      `}
+    className={`px-4 py-1 font-semibold select-none text-[17px] lg:text-xl cursor-pointer duration-150 hover:text-[${userColor}] ${
+      selected ? `text-[${userColor}]` : "text-[#4A6A83] dark:text-[#728AA1]"
+    }`}
+    style={{ color: selected ? userColor : "" }}
   >
     {sectionName}
   </p>
@@ -21,6 +26,8 @@ const MainPage = () => {
   const [section, setSection] = useState("Home");
   const navigate = useNavigate();
   const location = useLocation();
+  const { userColor } = useUserColor();
+  const { loading } = useUserColor();
 
   useEffect(() => {
     if (location.state?.section) {
@@ -42,17 +49,27 @@ const MainPage = () => {
     navigate("/", { state: { section: newSection }, replace: true });
   };
 
+  const reload = () => {
+    window.location.reload();
+  };
+
   const sections = {
-    Home: <p>Soy el home</p>,
+    Home: <HomeSection />,
     Task: <TaskList />,
     Settings: <SettingsSection />,
   };
 
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <>
-      <div>
-        <AddTaskButton />
-      </div>
+      {/* <AddTaskButton /> deshabilitado por el momento */}
       <div className="fixed z-50">
         <ToggleTheme />
       </div>
@@ -63,16 +80,19 @@ const MainPage = () => {
             sectionName={"Home"}
             handleChangeSection={handleChangeSection}
             selected={section === "Home"}
+            userColor={userColor}
           />
           <NavItem
             sectionName={"Task"}
             handleChangeSection={handleChangeSection}
             selected={section === "Task"}
+            userColor={userColor}
           />
           <NavItem
             sectionName={"Settings"}
             handleChangeSection={handleChangeSection}
             selected={section === "Settings"}
+            userColor={userColor}
           />
         </div>
       </div>

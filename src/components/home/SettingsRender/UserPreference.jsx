@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useUserColor } from "../../../contexts/UserColorContext";
+import Spinner from "../../others/Spinner";
 
 const PROFILE_COLORS = {
   red: "#DA4127",
@@ -13,23 +15,21 @@ const THEME_OPTIONS = [
     theme: "dark",
     bg: "#272C38",
     text: "#FFFFFF",
-    label: "Dark Theme",
   },
   {
     theme: "light",
     bg: "#D9D9D9",
     text: "#272727",
-    label: "Light Theme",
   },
 ];
 
 const UserPreference = ({
   onColorSelect,
   onThemeSelect,
-  defaultColor = "#DA4127",
   defaultTheme = "dark",
 }) => {
-  const [selectedColor, setSelectedColor] = useState(defaultColor);
+  const { userColor, loading } = useUserColor();
+  const [selectedColor, setSelectedColor] = useState(userColor);
   const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
 
   const handleColorClick = (color) => {
@@ -41,6 +41,10 @@ const UserPreference = ({
     setSelectedTheme(theme.theme);
     onThemeSelect?.(theme);
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="space-y-6">
@@ -56,7 +60,6 @@ const UserPreference = ({
             <button
               key={name}
               type="button"
-              aria-label={`Select ${name} color`}
               aria-pressed={selectedColor === color}
               className={`
                 p-5 lg:p-7 rounded-lg 
