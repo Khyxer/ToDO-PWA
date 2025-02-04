@@ -3,7 +3,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import gsap from "gsap";
 import { useToast } from "../../../hooks/useToast";
 
-const EditProfile = ({ onUserNameChange }) => {
+const EditProfile = ({ onUserNameChange, onFileChange }) => {
   const toast = useToast();
   const { user } = useAuth();
   const [currentUser, setCurrentUser] = useState(user.username);
@@ -79,8 +79,7 @@ const EditProfile = ({ onUserNameChange }) => {
         type === "avatar" ? setAvatarPreview : setBannerPreview,
         previewRef
       );
-
-      // aca tengo que poner la logica de editar el perfil
+      onFileChange(type, file);
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Failed to upload file. Please try again");
@@ -199,12 +198,12 @@ const EditProfile = ({ onUserNameChange }) => {
             disabled={isUploading}
             className="w-full h-28 lg:h-44 bg-[#EFF1F3] dark:bg-[#272C38] relative overflow-hidden 
               group transition-all duration-200 hover:dark:bg-[#323845] hover:bg-[#e2e2e2] 
-              focus:outline-none focus:ring-2 focus:ring-blue-500"
+              focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
             aria-label="Upload banner image"
           >
             <div
               className="absolute inset-0 flex items-center justify-center 
-              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83]"
+              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83] "
             >
               {isUploading ? "Uploading..." : "Click to update banner"}
             </div>
