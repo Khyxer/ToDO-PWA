@@ -4,11 +4,19 @@ import { FaCheck } from "react-icons/fa";
 import Spinner from "../../others/Spinner";
 import gsap from "gsap";
 import { useUserColor } from "../../../contexts/UserColorContext";
+import EditTaskModal from "./EditTaskModal";
 
-const TaskList = ({ status, tasks, updateTask }) => {
+const TaskList = ({
+  status,
+  tasks,
+  updateTask,
+  onTaskUpdate,
+  onTaskDelete,
+}) => {
   const [loading, setLoading] = useState(false);
   const [localTasks, setLocalTasks] = useState(tasks);
-  const [containerHeight, setContainerHeight] = useState("auto");
+  const [editTaskModal, setEditTaskModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   const { userColor } = useUserColor();
 
   useEffect(() => {
@@ -73,18 +81,20 @@ const TaskList = ({ status, tasks, updateTask }) => {
     setLoading(false);
   };
 
+  const handleEditTaskModal = (task) => {
+    setSelectedTask(task);
+    setEditTaskModal(true);
+  };
+
   return (
     <>
-      {loading
-        ? // <div className="h-screen top-0 left-0 flex justify-center fixed items-center bg-[#0b16224b] w-full">
-          //   <Spinner />
-          // </div>
-          null
-        : null}
       {tasks.length === 0 ? (
         <>
           {status === "completed" ? null : (
-            <p className="dark:text-[#728AA1] text-[#4A6A83] font-semibold lg:font-bold text-xl lg:text-2xl text-center">
+            <p
+              className="dark:text-[#728AA1] text-[#4A6A83] font-semibold lg:font-bold text-xl lg:text-2xl 
+            text-center"
+            >
               Add task by clicking the{" "}
               <span className="text-blue-500">"+"</span> icon
             </p>
@@ -99,35 +109,38 @@ const TaskList = ({ status, tasks, updateTask }) => {
           </header>
           <main className="w-full flex items-center justify-center ">
             <div
-              className="dark:bg-[#152232] bg-[#FAFAFA] dark:text-[#728AA1] text-[#4A6A83] rounded-lg w-full p-4 lg:px-10 grid gap-6"
-              style={{
-                minHeight: containerHeight,
-                transition: "min-height 0.3s ease",
-              }}
+              className="dark:bg-[#152232] bg-[#FAFAFA] dark:text-[#728AA1] text-[#4A6A83] rounded-lg w-full 
+            p-4 lg:px-10 grid gap-6"
             >
-              <div className="flex font-bold text-lg lg:text-xl">
+              <div className="flex font-bold text-lg lg:text-xl justify-between pl-5">
                 <h1>Icon</h1>
-                <h1 className="flex-1 text-center">Title/Desc</h1>
+                <h1>Title/Desc</h1>
                 <h1>Status</h1>
               </div>
-              <div className="flex flex-col gap-5 ">
+              <div className="flex flex-col gap-2 ">
                 {tasks.map((task) => (
                   <div
                     key={task.id}
                     data-task-id={task.id}
                     style={{ opacity: 1, transform: "translateX(0)" }}
-                    className="flex gap-12 items-center duration-75 "
+                    className="flex gap-12 items-center duration-150 cursor-pointer dark:hover:bg-[#1e57982e] 
+                    hover:bg-[#c0bfbf3c] p-2 rounded-xl "
                   >
-                    <span className="text-4xl lg:text-5xl select-none sm:min-w-[6%] flex justify-center items-center">
-                      {task.emoji}
-                    </span>
-                    <div className="flex justify-center flex-col flex-1">
-                      <h2 className="lg:text-2xl text-lg font-semibold line-clamp-2 ">
-                        {task.title}
-                      </h2>
-                      <p className="line-clamp-1 text-sm lg:text-base">
-                        {task.description}
-                      </p>
+                    <div
+                      className="flex flex-1 gap-12"
+                      onClick={() => handleEditTaskModal(task)}
+                    >
+                      <span className="text-4xl lg:text-5xl select-none sm:min-w-[6%] flex justify-center items-center">
+                        {task.emoji}
+                      </span>
+                      <div className="flex justify-center flex-col flex-1">
+                        <h2 className="lg:text-2xl text-lg font-semibold line-clamp-2 ">
+                          {task.title}
+                        </h2>
+                        <p className="line-clamp-1 text-sm lg:text-base">
+                          {task.description}
+                        </p>
+                      </div>
                     </div>
                     {task.completed ? (
                       <div
@@ -150,6 +163,17 @@ const TaskList = ({ status, tasks, updateTask }) => {
             </div>
           </main>
         </div>
+      )}
+      {editTaskModal && (
+        <EditTaskModal
+          handleCloseModal={() => {
+            setEditTaskModal(false);
+            setSelectedTask(null);
+          }}
+          task={selectedTask}
+          onTaskUpdate={onTaskUpdate}
+          onTaskDelete={onTaskDelete}
+        />
       )}
     </>
   );

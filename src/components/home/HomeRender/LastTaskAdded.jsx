@@ -53,32 +53,36 @@ const LastTaskAdded = () => {
               create a new task
             </h1>
           ) : (
-            <div className="grid gap-2">
+            <div className="grid gap-3">
               <h1 className="font-medium text-xl lg:text-2xl text-[#4A6A83] dark:text-[#728AA1]">
                 Recent Added Task
               </h1>
               {tasks.map((task) => (
                 <div
-                  className="dark:bg-[#152232] bg-[#FAFAFA] rounded-lg  flex gap-4 dark:text-[#728AA1] text-[#4A6A83] items-center px-4 py-2"
+                  className="dark:bg-[#152232] bg-[#FAFAFA] rounded-lg  flex gap-6 dark:text-[#728AA1] 
+                  text-[#4A6A83] items-center px-4 py-2 lg:py-4 lg:px-6 "
                   key={task.id}
                 >
-                  <span className="text-3xl">{task.emoji}</span>
+                  <span className="text-3xl lg:text-[42px]">{task.emoji}</span>
                   <div className="flex-1 ">
-                    <h2 className="line-clamp-1 text-xl font-semibold">
+                    <h2 className="line-clamp-1 text-xl font-semibold lg:text-[27px]">
                       {task.title}
                     </h2>
-                    <p className="text-sm line-clamp-1">{task.description}</p>
+                    <p className="text-sm line-clamp-1 lg:text-base">
+                      {task.description}
+                    </p>
                   </div>
                   {task.completed ? (
                     <div
-                      className="w-7 h-7 rounded-full  flex items-center justify-center text-white"
+                      className="w-7 h-7 lg:w-9 lg:h-9 rounded-full lg:text-xl flex items-center justify-center 
+                      text-white"
                       style={{ backgroundColor: userColor }}
                     >
                       <FaCheck />
                     </div>
                   ) : (
                     <div
-                      className="w-7 h-7 rounded-full border-2 "
+                      className="w-7 h-7 lg:w-9 lg:h-9 rounded-full border-2 "
                       style={{ borderColor: userColor }}
                     ></div>
                   )}

@@ -71,6 +71,16 @@ const TasksSection = () => {
     setSelectedEmoji(emoji);
   };
 
+  const handleTaskUpdate = async (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+  };
+
+  const handleTaskDelete = (taskId) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
   const handleAddTask = async () => {
     if (!selectedEmoji || !taskName || !taskDesc) {
       toast.error("You need to complete all inputs");
@@ -192,10 +202,11 @@ const TasksSection = () => {
           >
             <section
               ref={modalRef}
-              className="dark:bg-[#152232] bg-[#FAFAFA] z-[51] text-[#4A6A83] lg:w-[50%] w-[90%] items-center justify-center dark:text-[#728AA1] px-6 py-2 pb-10 gap-4 rounded-lg flex flex-col"
+              className="dark:bg-[#152232] bg-[#FAFAFA] z-[51] text-[#4A6A83] lg:w-[50%] w-[90%] items-center 
+              justify-center dark:text-[#728AA1] px-6 py-2 pb-10 gap-4 rounded-lg flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <header className="w-full text-4xl flex justify-end ">
+              <header className="w-full text-4xl flex justify-end">
                 <IoClose
                   onClick={handleCloseModal}
                   className="cursor-pointer hover:bg-[#728aa11f] rounded-full duration-150"
@@ -215,8 +226,9 @@ const TasksSection = () => {
                     type="text"
                     onChange={(e) => setTaskName(e.target.value)}
                     placeholder="Buy a new computer"
-                    className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 
-                    focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] 
+                    font-semibold p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none 
+                    transition-all duration-200"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -225,12 +237,14 @@ const TasksSection = () => {
                     rows={5}
                     placeholder="Go to a real store to buy a new computer"
                     onChange={(e) => setTaskDesc(e.target.value)}
-                    className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] font-semibold p-2 outline-none
-                    focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="border border-[#728AA143] bg-[#728AA113] rounded-sm placeholder:text-[#728AA155] 
+                    font-semibold p-2 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                    transition-all duration-200"
                   ></textarea>
                 </div>
                 <button
-                  className=" bg-[#2696E0] dark:bg-[#027FBE] outline-none px-4 py-1 rounded-lg text-white font-bold text-lg"
+                  className=" bg-[#2696E0] dark:bg-[#027FBE] outline-none px-4 py-1 rounded-lg text-white 
+                  font-bold text-lg"
                   onClick={handleAddTask}
                 >
                   Add Task
@@ -244,11 +258,15 @@ const TasksSection = () => {
         status="pending"
         tasks={tasks.filter((task) => !task.completed)}
         updateTask={updateTask}
+        onTaskUpdate={handleTaskUpdate}
+        onTaskDelete={handleTaskDelete}
       />
       <TaskList
         status="completed"
         tasks={tasks.filter((task) => task.completed)}
         updateTask={updateTask}
+        onTaskUpdate={handleTaskUpdate}
+        onTaskDelete={handleTaskDelete}
       />
     </div>
   );

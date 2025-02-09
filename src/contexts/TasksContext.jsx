@@ -40,7 +40,7 @@ export const TasksProvider = ({ children }) => {
       };
       const taskRef = collection(db, `users/${userId}/tasks`);
       await addDoc(taskRef, taskData);
-      fetchTasks(); // Actualiza la lista de tareas
+      fetchTasks();
     } catch (error) {
       console.error("Error adding task:", error);
     }

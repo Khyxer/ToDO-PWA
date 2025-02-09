@@ -28,9 +28,9 @@ const UserPreference = ({
   onThemeSelect,
   defaultTheme = "dark",
 }) => {
-  const { userColor, loading } = useUserColor();
+  const { userColor, loading, userTheme } = useUserColor();
   const [selectedColor, setSelectedColor] = useState(userColor);
-  const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
+  const [selectedTheme, setSelectedTheme] = useState(userTheme);
 
   const handleColorClick = (color) => {
     setSelectedColor(color);

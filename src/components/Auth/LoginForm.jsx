@@ -40,7 +40,8 @@ const LoginForm = () => {
     <>
       {isLoading ? <Loading message={"logging in..."} /> : ""}
       <ToggleTheme />
-      <div className="dark:bg-[#152232] bg-[#FAFAFA] py-20 px-9 gap-10 rounded-lg md:w-[60%] xl:w-[30%] w-full flex flex-col justify-center items-center">
+      <div className="dark:bg-[#152232] bg-[#FAFAFA] py-20 px-9 gap-10 rounded-lg md:w-[60%] xl:w-[30%] w-full flex 
+      flex-col justify-center items-center">
         <h2 className="dark:text-[#728AA1] text-5xl font-extrabold text-[#4A6A83] ">
           Log In
         </h2>
@@ -61,7 +62,8 @@ const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button className="dark:bg-[#027FBE] bg-[#2696E0] text-2xl font-bold py-1 lg:py-2 px-8 text-[#EDF1F5] dark:text-[#D3D3D3] rounded-xl ">
+          <button className="dark:bg-[#027FBE] bg-[#2696E0] text-2xl font-bold py-1 lg:py-2 px-8 text-[#EDF1F5] 
+          dark:text-[#D3D3D3] rounded-xl ">
             Log In
           </button>
         </form>

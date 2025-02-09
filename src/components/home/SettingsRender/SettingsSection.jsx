@@ -105,18 +105,6 @@ const SettingsSection = () => {
     return <Spinner />;
   }
 
-  const handletest = async () => {
-    try {
-      const currentUser = auth.currentUser.uid;
-      const userRef = doc(db, `users/${currentUser}`);
-      const docSnap = await getDoc(userRef);
-      const avatarUrl = docSnap.data().avatarUrl;
-      console.log(avatarUrl);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
   return (
     <>
       {updatingProfile && (
@@ -135,7 +123,7 @@ const SettingsSection = () => {
           <UserPreference
             onColorSelect={handleColorChange}
             onThemeSelect={handleThemeChange}
-            defaultTheme={settings.selectedTheme.theme}
+            defaultTheme={settings.selectedTheme.theme} //esto no deberia hacer nada pero por alguna razon rompe todo xD
           />
 
           <EditProfile
@@ -144,7 +132,10 @@ const SettingsSection = () => {
             onFileChange={handleFileChange}
           />
 
-          <div className="flex items-center lg:flex-row flex-col-reverse justify-between gap-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div
+            className="flex items-center lg:flex-row flex-col-reverse justify-between gap-6 pt-4 border-t
+           border-gray-200 dark:border-gray-700"
+          >
             <button
               onClick={logout}
               className="border-red-600 border-2 hover:bg-red-600 duration-200 rounded-md text-red-600 
@@ -166,12 +157,6 @@ const SettingsSection = () => {
             </button>
           </div>
         </div>
-        <button
-          className="bg-blue-500 px-5 py-2 text-white"
-          onClick={handletest}
-        >
-          TEST
-        </button>
       </main>
     </>
   );

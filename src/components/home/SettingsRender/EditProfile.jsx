@@ -122,7 +122,9 @@ const EditProfile = ({ onUserNameChange, onFileChange }) => {
           aria-label="Username"
           spellCheck={false}
           maxLength={15}
-          className="w-full border border-[#728AA143] bg-[#728AA113] rounded-md placeholder:text-[#728AA155] text-[#4A6A83] dark:text-[#728AA1] font-semibold px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+          className="w-full border border-[#728AA143] bg-[#728AA113] rounded-md placeholder:text-[#728AA155] 
+          text-[#4A6A83] dark:text-[#728AA1] font-semibold px-3 py-2 focus:ring-2 focus:ring-blue-500 
+          focus:border-transparent outline-none transition-all duration-200"
         />
       </section>
 
@@ -146,7 +148,8 @@ const EditProfile = ({ onUserNameChange, onFileChange }) => {
           >
             <div
               className="absolute inset-0 flex items-center justify-center 
-              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83]"
+              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white 
+              group-hover:text-[#4A6A83]"
             >
               {isUploading ? (
                 "Uploading..."
@@ -203,7 +206,8 @@ const EditProfile = ({ onUserNameChange, onFileChange }) => {
           >
             <div
               className="absolute inset-0 flex items-center justify-center 
-              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white group-hover:text-[#4A6A83] "
+              text-center font-medium dark:text-[#B9B9B9] text-[#4A6A83] group-hover:dark:text-white 
+              group-hover:text-[#4A6A83] "
             >
               {isUploading ? "Uploading..." : "Click to update banner"}
             </div>

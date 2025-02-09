@@ -4,7 +4,7 @@ import TasksInfo from "./TasksInfo";
 const HomeSection = () => {
   return (
     <>
-      <div className="grid gap-7" >
+      <div className="grid gap-12 lg:mt-7">
         <TasksInfo />
         <LastTaskAdded />
       </div>

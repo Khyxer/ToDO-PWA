@@ -74,7 +74,7 @@ const MainPage = () => {
         <ToggleTheme />
       </div>
       <HeroSection />
-      <div className="dark:bg-[#152232] bg-[#FAFAFA] py-2">
+      <div className="dark:bg-[#152232] bg-[#FAFAFA] py-2 ">
         <div className="flex gap-2 justify-evenly lg:justify-center lg:gap-40 items-center">
           <NavItem
             sectionName={"Home"}

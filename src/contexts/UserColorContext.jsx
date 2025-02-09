@@ -10,6 +10,7 @@ export const useUserColor = () => {
 
 export const UserColorProvider = ({ children }) => {
   const [userColor, setUserColor] = useState("#DA4127");
+  const [userTheme, setUserTheme] = useState("dark");
   const [loading, setLoading] = useState(true);
 
   const fetchUserColor = async () => {
@@ -26,7 +27,9 @@ export const UserColorProvider = ({ children }) => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         const color = userData.color || "#DA4127";
+        const theme = userData.theme || "dark";
         setUserColor(color);
+        setUserTheme(theme);
       } else {
         console.error("User document does not exist");
       }
@@ -42,7 +45,9 @@ export const UserColorProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserColorContext.Provider value={{ userColor, setUserColor, loading }}>
+    <UserColorContext.Provider
+      value={{ userColor, setUserColor, loading, userTheme, setUserTheme }}
+    >
       {children}
     </UserColorContext.Provider>
   );
